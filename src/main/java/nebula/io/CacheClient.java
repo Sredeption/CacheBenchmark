@@ -43,23 +43,15 @@ public class CacheClient {
             ChannelFuture channelFuture = bootstrap.connect(host, port);
             channel = channelFuture.sync().channel();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        channel.closeFuture().sync();
-                    } catch (InterruptedException e) {
-                        group.shutdownGracefully();
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
         } catch (Exception e) {
             e.printStackTrace();
             group.shutdownGracefully();
             throw e;
         }
+    }
+
+    void close() {
+        group.shutdownGracefully();
     }
 
     String get(String key) {
@@ -84,17 +76,27 @@ public class CacheClient {
         String hostName = args[0];
         int port = Integer.valueOf(args[1]);
 
-        CacheClient rpcClient = new CacheClient();
-        rpcClient.connect(hostName, port);
+        CacheClient cacheClient = new CacheClient();
+        cacheClient.connect(hostName, port);
+        int number = 100000;
+        double readPercent = 0.7;
 
-        for (int i = 0; i < 100; i++) {
-            String value;
-            rpcClient.put("k" + i, "v" + i);
-            value = rpcClient.get("k" + i);
-            Assert.assertEquals("v" + i, value);
+        long start = System.nanoTime();
+        for (int i = 0; i < number; i++) {
+            Double key = Math.random();
+            if (key < readPercent) {
+                cacheClient.get(key.toString());
+            } else {
+                cacheClient.put(key.toString(), "value:" + key.toString());
+            }
         }
+        long end = System.nanoTime();
 
-        logger.info("test finished");
+        double time = (end - start) / 1000. / 1000.;
+        logger.info(String.format("%d requests in %f ms;latency %f us, throughput %f ops", number, time,
+                time * 1000 / number, number / time * 1000));
+
+        cacheClient.close();
     }
 
 }

@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 
 public class CacheService extends ChannelInboundHandlerAdapter {
     private static Logger logger = Logger.getLogger(CacheService.class.getName());
-    private static Cache cache = new Cache(100);
-
+    private static Cache cache = new Cache(100000);
 
     CacheService() {
     }

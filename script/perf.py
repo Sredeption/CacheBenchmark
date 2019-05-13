@@ -6,7 +6,7 @@ from remote import Server
 
 hosts = []
 # numbers = [4, 20, 2, 3, 5, 6, 14, 15, 16, 18, 19, 21]
-numbers = [4, 20, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 16, 18, 19, 20, 21]
+numbers = [14, 15, 16, 18, 19, 20, 21]
 
 for number in numbers:
     hosts.append("10.22.1.%d" % number)
