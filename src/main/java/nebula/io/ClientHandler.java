@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
-    private ChannelHandlerContext ctx;
+    private volatile ChannelHandlerContext ctx;
     private AtomicBoolean received;
     private Message data;
     private static Logger logger = Logger.getLogger(ClientHandler.class.getName());
@@ -20,8 +20,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     public void sendMessage(Object message) {
-        if (ctx == null)
-            throw new IllegalStateException();
+        while (ctx == null);
         received.set(false);
         ctx.writeAndFlush(message).channel();
     }
