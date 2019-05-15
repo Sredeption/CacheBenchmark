@@ -10,8 +10,8 @@ public class CacheServer {
     public static void main(String[] args) throws Exception {
         String hostName = args[0];
         int port = Integer.valueOf(args[1]);
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        EventLoopGroup workerGroup = new NioEventLoopGroup(4);
         try {
             ServerBootstrap b = new ServerBootstrap();
 

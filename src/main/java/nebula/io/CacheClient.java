@@ -73,8 +73,8 @@ public class CacheClient {
 
     public static void main(String[] args) throws Exception {
 
-        String hostName = args[0];
-        int port = Integer.valueOf(args[1]);
+        String hostName = args[1];
+        int port = Integer.valueOf(args[2]);
 
         CacheClient cacheClient = new CacheClient();
         cacheClient.connect(hostName, port);
@@ -93,8 +93,8 @@ public class CacheClient {
         long end = System.nanoTime();
 
         double time = (end - start) / 1000. / 1000.;
-        logger.info(String.format("%d requests in %f ms;latency %f us, throughput %f ops", number, time,
-                time * 1000 / number, number / time * 1000));
+        logger.info(String.format("%s:%d requests in %f ms;latency %f us, throughput %f ops",
+                args[0], number, time, time * 1000 / number, number / time * 1000));
 
         cacheClient.close();
     }

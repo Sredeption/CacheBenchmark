@@ -1,9 +1,10 @@
 import subprocess
 import os
+import random
 
 binary_prefix = "java -cp %s/build/libs/CacheBenchmark-1.0-SNAPSHOT-all.jar" % os.getcwd()
 
-port = 3000
+port = random.randint(1000, 60000)
 
 
 class RemoteProcess:
@@ -39,5 +40,5 @@ class KillServer(RemoteProcess):
 
 class Client(RemoteProcess):
     def __init__(self, host, server_host):
-        command = "%s nebula.io.CacheClient %s %d" % (binary_prefix, server_host, port)
+        command = "%s nebula.io.CacheClient %s %s %d" % (binary_prefix, host, server_host, port)
         RemoteProcess.__init__(self, host, command)
